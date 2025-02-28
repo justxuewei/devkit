@@ -60,4 +60,3 @@ test COMP MOD:
   @[ "{{COMP}}" = "db" ] \
     && (cd src/inhouse/dragonball \
     && cargo test {{MOD}} -- --nocapture --test-threads=1) || :
-EOF

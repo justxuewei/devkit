@@ -40,8 +40,6 @@ cp $curdir/justfile.$type justfile
 escaped_location=$(echo "$location" | sed 's/\//\\\//g')
 sed -i "s/{{CURRENT_DIR}}/$escaped_location/g" justfile
 
-cat justfile
-
 cp justfile $location/justfile
 
 rm -rf justfile

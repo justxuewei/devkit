@@ -1,0 +1,48 @@
+build COMP:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/runtime-rs \
+    && make BUILD_TYPE=debug) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/dragonball \
+    && cargo build --target x86_64-unknown-linux-gnu) || :
+  @[ "{{COMP}}" = "rtgo" ] \
+    && (cd src/runtime \
+    && make BUILD_TYPE=debug) || :
+  @[ "{{COMP}}" = "ag" ] \
+    && (cd src/agent \
+    && make SECCOMP=no) || :
+
+remove-link:
+  sudo rm -rf /usr/local/bin/containerd-shim-kata-v2
+
+link: remove-link
+  sudo ln -s {{CURRENT_DIR}}/src/runtime-rs/target/x86_64-unknown-linux-musl/debug/containerd-shim-kata-v2 /usr/local/bin
+
+clean COMP:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/runtime-rs \
+    && make clean) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/dragonball \
+    && make clean) || :
+  @[ "{{COMP}}" = "ag" ] \
+    && (cd src/agent \
+    && make clean) || :
+
+fmt:
+  @cd src/runtime-rs && cargo fmt && echo "runtime-rs completed"
+  @cd src/dragonball && cargo fmt && echo "dragonball completed"
+  @cd src/agent && cargo fmt && echo "agent completed"
+
+check COMP:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/runtime-rs \
+    && make check) || :
+
+test COMP MOD:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/runtime-rs \
+    && cargo test {{MOD}} -- --nocapture --test-threads=1) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/dragonball \
+    && cargo test {{MOD}} -- --nocapture --test-threads=1) || :
