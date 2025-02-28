@@ -1,0 +1,63 @@
+build COMP:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/inhouse/runtime/src \
+    && cargo build --target x86_64-unknown-linux-musl) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/inhouse/dragonball \
+    && cargo build --target x86_64-unknown-linux-gnu) || :
+
+clean COMP:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/inhouse/runtime/src \
+    && make clean) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/inhouse/dragonball \
+    && make clean) || :
+
+build-release COMP:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/inhouse/runtime/src \
+    && cargo build --release --target x86_64-unknown-linux-musl) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/inhouse/dragonball \
+    && cargo build --release --target x86_64-unknown-linux-gnu) || :
+
+setup-conf:
+  cd src/inhouse/runtime/src/target/x86_64-unknown-linux-musl \
+    && mkdir kata-containers2 \
+    && cd kata-containers2 \
+    && ln -s /etc/kata-containers2/configuration.toml configuration.toml
+
+remove-link:
+  sudo rm -rf /usr/local/bin/containerd-shim-rund-v2*
+
+link: remove-link
+  sudo ln -s {{CURRENT_DIR}}/src/inhouse/runtime/src/target/x86_64-unknown-linux-musl/debug/containerd-shim-rund-v2 /usr/local/bin \
+    && sudo ln -s {{CURRENT_DIR}}/src/inhouse/runtime/src/target/x86_64-unknown-linux-musl/debug/containerd-shim-rund-v2-cli /usr/local/bin
+
+init:
+  git submodule update --init --recursive
+
+deinit:
+  git submodule deinit -f .
+
+fmt:
+  @cd src/inhouse/runtime/src && cargo fmt
+  @cd src/inhouse/dragonball && cargo fmt
+
+clippy:
+  @cd src/inhouse/runtime/src \
+    && cargo clippy --all-targets --all-features -- -D warnings
+  @cd src/inhouse/dragonball \
+    && cargo clippy -- -D warnings
+
+check: fmt clippy
+
+test COMP MOD:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/inhouse/runtime/src \
+    && cargo test {{MOD}} -- --nocapture --test-threads=1) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/inhouse/dragonball \
+    && cargo test {{MOD}} -- --nocapture --test-threads=1) || :
+EOF
