@@ -1,0 +1,14 @@
+{
+    "metadata": {
+        "name": "be0b9f0e-2ba9-487a-b91e-14d711e27236-container-1"
+    },
+    "image": {
+        "image": "reg.docker.alibaba-inc.com/runsc_test/nano_server:ac767ab9_runsc"
+    },
+    "command": [
+        "/bin/bash",
+        "-c",
+        "echo nginx; nginx; sleep infinity"
+    ],
+    "linux": {}
+}

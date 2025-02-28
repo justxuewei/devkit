@@ -1,0 +1,14 @@
+{
+    "metadata": {
+        "name": "5f11d168-8b04-458b-8c74-7f83c22ee280-container-1"
+    },
+    "image": {
+        "image": "reg.docker.alibaba-inc.com/runsc_test/nano_server:ac767ab9_runsc"
+    },
+    "command": [
+        "/bin/bash",
+        "-c",
+        "echo client; sleep infinity"
+    ],
+    "linux": {}
+}
