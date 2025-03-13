@@ -15,8 +15,8 @@ cleanup() {
 }
 
 runtime=""
-image=""
-command=""
+image="busybox"
+command="top"
 verbose=false
 
 while getopts ":r:i:c:v" opt; do
@@ -48,16 +48,11 @@ trap cleanup EXIT
 cp sandbox.json __sandbox.json
 cp container.json __container.json
 
-if [ ! -z "image" ]; then
-    sed -i "s|busybox|$image|g" __container.json
-else
-    image="busybox"
-fi
-
-if [ ! -z "command" ]; then
-    _command=`echo $command | awk '{for(i=1;i<=NF;i++) $i="\""$i"\""; gsub(" ",",")}1'` 
-    sed -i "s|\"top\"|$_command|g" __container.json
-fi
+jq --arg img "$image" '.image.image = $img' __container.json > /tmp/__pod_generic.json
+cp -f /tmp/__pod_generic.json __container.json
+command_jarr=$(echo $command | jq -R 'split(" ")')
+jq --argjson new_command "$command_jarr" '.command = $new_command' __container.json > /tmp/__pod_generic.json
+cp -f /tmp/__pod_generic.json __container.json
 
 echo "Pod Summary:"
 echo "	runtime: $runtime"
