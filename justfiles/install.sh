@@ -41,3 +41,5 @@ sed -i "s/{{CURRENT_DIR}}/$escaped_location/g" justfile
 cp justfile $location/justfile
 
 rm -rf justfile
+
+echo "ok... saved at \"$location/justfile\""
