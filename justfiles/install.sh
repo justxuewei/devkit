@@ -43,3 +43,12 @@ cp justfile $location/justfile
 rm -rf justfile
 
 echo "ok... saved at \"$location/justfile\""
+
+# Add justfile to exclude list
+if [ -f "$location/.git/info/exclude" ]; then
+    # if exitcode is not 0
+    if ! grep -q "justfile" "$location/.git/info/exclude"; then
+        echo "/justfile" >> "$location/.git/info/exclude"
+        echo "ok... added justfile to git exclude list"
+    fi
+fi
