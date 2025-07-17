@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kata-yes-pod
+  namespace: default
+spec:
+  runtimeClassName: kata
+  containers:
+  - name: yes-container
+    image: busybox:latest
+    command: ["yes"]
+    resources:
+      limits:
+        cpu: "2"
+        memory: "3Gi"
+      requests:
+        cpu: "2"
+        memory: "4Gi"
+  restartPolicy: Never
