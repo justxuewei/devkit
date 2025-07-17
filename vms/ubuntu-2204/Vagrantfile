@@ -1,0 +1,19 @@
+Vagrant.configure("2") do |config|
+  config.disksize.size = "128GB"
+  config.vm.box = "bento/ubuntu-22.04"
+  config.vm.define "ubuntu-2204" do |kata|
+    kata.vm.hostname = "ubuntu-2204"
+    kata.vm.network "private_network", type: "dhcp"
+    kata.vm.provider "virtualbox" do |vb|
+      vb.cpus = 20
+      vb.memory = "16384"
+      vb.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
+    end
+  end
+    
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.http = "http://127.0.0.1:7890/"
+    config.proxy.https = "http://127.0.0.1:7890/"
+    config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  end
+ end
