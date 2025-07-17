@@ -29,13 +29,13 @@ clean COMP:
     && (cd src/agent \
     && make clean) || :
 
-# Format componments written in Rust: runtime-rs, dragonball and agent
+# Format the source code
 fmt:
   @cd src/runtime-rs && cargo fmt && echo "runtime-rs completed"
   @cd src/dragonball && cargo fmt && echo "dragonball completed"
   @cd src/agent && cargo fmt && echo "agent completed"
 
-# Check the source code, involved: make check, cargo clippy, cargo fmt
+# Check the source code: make check, cargo clippy & fmt
 check COMP:
   @[ "{{COMP}}" = "rt" ] \
     && (cd src/runtime-rs \
@@ -53,7 +53,7 @@ check COMP:
     && cargo clippy --all-targets --all-features -- -D warnings \
     && cargo fmt) || :
 
-# Runs unit tests
+# Run unit tests
 test COMP MOD:
   @[ "{{COMP}}" = "rt" ] \
     && (cd src/runtime-rs \
