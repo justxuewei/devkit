@@ -39,17 +39,15 @@ fmt:
 check COMP:
   @[ "{{COMP}}" = "rt" ] \
     && (cd src/runtime-rs \
-    && make check \
     && cargo clippy --all-targets --all-features -- -D warnings \
-    && cargo fmt) || :
+    && cargo fmt \
+    && make check) || :
   @[ "{{COMP}}" = "db" ] \
     && (cd src/dragonball \
-    && cargo check \
     && cargo clippy --all-targets --all-features -- -D warnings \
     && cargo fmt) || :
   @[ "{{COMP}}" = "ag" ] \
     && (cd src/agent \
-    && make check \
     && cargo clippy --all-targets --all-features -- -D warnings \
     && cargo fmt) || :
 
