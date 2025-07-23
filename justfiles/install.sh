@@ -28,12 +28,12 @@ if [ -z "$location" ] || [ -z "$type" ]; then
     usage
 fi
 
-if [ ! -f "justfile.$type" ]; then
+curdir=$(dirname "$(realpath "$BASH_SOURCE")")
+if [ ! -f "$curdir/justfile.$type" ]; then
     echo "template for $type not exists"
     exit 1
 fi
 
-curdir=$(dirname "$(realpath "$BASH_SOURCE")")
 cp $curdir/justfile.$type justfile
 escaped_location=$(echo "$location" | sed 's/\//\\\//g')
 sed -i "s/{{CURRENT_DIR}}/$escaped_location/g" justfile

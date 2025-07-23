@@ -15,8 +15,19 @@ build COMP:
 remove-link:
   sudo rm -rf /usr/local/bin/containerd-shim-kata-v2
 
+arch := `uname -m`
+target := if "x86_64" == arch {
+	"x86_64-unknown-linux-musl"
+} else if "s390x" == arch {
+	"s390x-unknown-linux-gnu"
+} else {
+	error("unsupported architecture: " + arch)
+}
+
 link: remove-link
-  sudo ln -s {{CURRENT_DIR}}/src/runtime-rs/target/x86_64-unknown-linux-musl/debug/containerd-shim-kata-v2 /usr/local/bin
+  sudo ln -s \
+    {{CURRENT_DIR}}/src/runtime-rs/target/{{ target }}/debug/containerd-shim-kata-v2 \
+    /usr/local/bin
 
 clean COMP:
   @[ "{{COMP}}" = "rt" ] \
