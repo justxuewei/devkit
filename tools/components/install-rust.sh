@@ -25,6 +25,19 @@ if [ $ARCH = "amd64" ]; then
     echo "ok... x86_64-unknown-linux-musl target added"
 fi
 
+cat > ~/.cargo/config.toml <<EOF
+[source.crates-io]
+replace-with = 'rsproxy-sparse'
+[source.rsproxy]
+registry = "https://rsproxy.cn/crates.io-index"
+[source.rsproxy-sparse]
+registry = "sparse+https://rsproxy.cn/index/"
+[registries.rsproxy]
+index = "https://rsproxy.cn/crates.io-index"
+[net]
+git-fetch-with-cli = true
+EOF
+
 echo "ok... rust $RUST_VERSION installed, run the following to update your PATH"
 echo '. "$HOME/.cargo/env"'
 
