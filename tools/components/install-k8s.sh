@@ -40,7 +40,7 @@ export NO_PROXY="$NO_PROXY,10.0.0.0/8,192.168.0.0/16"
 if ! grep -q 'export NO_PROXY=' ~/.bashrc; then
     echo "export NO_PROXY=$NO_PROXY" >>~/.bashrc
 fi
-echo "ok... set NO_PROXY for 10.0.0.0/8,192.168.0.0/16"
+echo "ok... set no_proxy for kubernetes"
 
 sudo swapoff -a
 sudo sed -i.bak '/\sswap\s/s/^/#/' /etc/fstab
@@ -68,3 +68,7 @@ handler: kata
 EOF
 kubectl apply -f /tmp/kata-runtime.yaml
 echo "ok... kata runtime class created"
+
+echo ""
+echo "please run the following commands to complete the setup"
+echo "source ~/.bashrc"

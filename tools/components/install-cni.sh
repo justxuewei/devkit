@@ -1,10 +1,14 @@
 #!/bin/bash
 
+CNI_VERSION="${1:-v1.3.0}"
+
 pushd /tmp
 
-git clone https://github.com/containernetworking/plugins.git cni-plugins > /dev/null
-cd cni-plugins
-./build_linux.sh > /dev/null
+git clone --branch $CNI_VERSION \
+    https://github.com/containernetworking/plugins.git \
+    cni-plugins >/dev/null
+pushd /tmp/cni-plugins
+./build_linux.sh >/dev/null
 sudo mkdir -p /opt/cni/bin
 sudo cp bin/* /opt/cni/bin
 

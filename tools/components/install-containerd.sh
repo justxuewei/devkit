@@ -31,7 +31,7 @@ sudo tar -xvf /tmp/containerd-$CONTAINERD_VERSION-linux-$ARCH.tar.gz -C /usr/loc
 sudo rm -rf /lib/systemd/system/containerd.service
 sudo sh -c "wget -qO - https://raw.githubusercontent.com/containerd/containerd/main/containerd.service > /lib/systemd/system/containerd.service"
 
-if ! curl -Is https://x.com >/dev/null 2>&1; then
+if ! env -i bash -c 'curl -Is --max-time 3 https://x.com' >/dev/null 2>&1; then
     PROXY=1
 else
     PROXY=0
@@ -39,7 +39,9 @@ else
 fi
 
 if [ $PROXY -eq 1 ]; then
-    sed -i '/^\[Service\]/a Environment="HTTP_PROXY=http://127.0.0.1:7890"\nEnvironment="HTTPS_PROXY=http://127.0.0.1:7890"\nEnvironment="NO_PROXY=$NO_PROXY,10.0.0.0/8,192.168.0.0/16"\n' /lib/systemd/system/containerd.service
+    sudo sed -i \
+      '/^\[Service\]/a Environment="HTTP_PROXY=http://127.0.0.1:7890"\nEnvironment="HTTPS_PROXY=http://127.0.0.1:7890"\nEnvironment="NO_PROXY=$NO_PROXY,10.0.0.0/8,192.168.0.0/16"\n' \
+      /lib/systemd/system/containerd.service
     echo "ok... set proxy for containerd"
 fi
 

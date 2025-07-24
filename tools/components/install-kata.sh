@@ -32,4 +32,4 @@ sudo mkdir -p /etc/kata-containers/runtime-rs
 sudo cp /opt/kata/share/defaults/kata-containers/runtime-rs/* /etc/kata-containers/runtime-rs/
 sudo ln -fs /etc/kata-containers/runtime-rs/configuration-qemu-runtime-rs.toml /etc/kata-containers/runtime-rs/configuration.toml
 sudo chown -R ${USER}:${GROUP} /etc/kata-containers
-echo "ok... applied runtime-rs qemu config"
+echo "ok... runtime-rs qemu config applied"
