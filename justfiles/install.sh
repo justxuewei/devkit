@@ -34,13 +34,13 @@ if [ ! -f "$curdir/justfile.$type" ]; then
     exit 1
 fi
 
-cp $curdir/justfile.$type justfile
+cp $curdir/justfile.$type /tmp/justfile
 escaped_location=$(echo "$location" | sed 's/\//\\\//g')
-sed -i "s/{{CURRENT_DIR}}/$escaped_location/g" justfile
+sed -i "s/{{CURRENT_DIR}}/$escaped_location/g" /tmp/justfile
 
-cp justfile $location/justfile
+cp /tmp/justfile $location/justfile
 
-rm -rf justfile
+rm -rf /tmp/justfile
 
 echo "ok... saved at \"$location/justfile\""
 
