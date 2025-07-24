@@ -4,9 +4,6 @@ set -e
 
 CURDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-sudo apt-get update >/dev/null
-sudo apt-get install -y bats >/dev/null
-
 bash $CURDIR/components/install-go.sh
 source ~/.bashrc
 
@@ -20,8 +17,6 @@ bash $CURDIR/components/install-cni.sh
 bash $CURDIR/components/install-crictl.sh
 
 bash $CURDIR/components/install-kata.sh
-
-bash $CURDIR/components/install-k8s.sh
 
 echo "please run the following commands to complete the setup"
 echo 'source ~/.bashrc'
