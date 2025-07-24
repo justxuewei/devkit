@@ -28,5 +28,5 @@ if ! grep -q 'export PATH=$PATH:/usr/local/go/bin' ~/.bashrc; then
     echo 'export PATH=$PATH:/usr/local/go/bin' >>~/.bashrc
 fi
 
-echo "ok... go ${GO_VERSION} installed"
-echo "run 'source ~/.bashrc' to update your PATH"
+echo "ok... go ${GO_VERSION} installed, run the following to update your PATH"
+echo "source ~/.bashrc"

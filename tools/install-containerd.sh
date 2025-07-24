@@ -48,19 +48,20 @@ sudo systemctl enable --now containerd
 
 echo "ok... containerd $CONTAINERD_VERSION installed"
 
+sudo apt-get update >/dev/null
 sudo apt-get install -y runc >/dev/null
 echo "ok... runc installed"
 
 sudo mkdir -p /etc/containerd
 sudo sh -c "containerd config default > /etc/containerd/config.toml"
 
-sed -i '/^[[:space:]]*\[plugins\."io\.containerd\.grpc\.v1\.cri"\.containerd\.runtimes\]/a\
+sudo sed -i '/^[[:space:]]*\[plugins\."io\.containerd\.grpc\.v1\.cri"\.containerd\.runtimes\]/a\
         [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.kata]\
           runtime_type = "io.containerd.kata.v2"\
           pod_annotations = ["io.katacontainers.*"]\
           privileged_without_host_devices = true\
           privileged_without_host_devices_all_devices_allowed = true\
 ' /etc/containerd/config.toml
-sed -i 's/^\([[:space:]]*level = \).*/\1"debug"/' /etc/containerd/config.toml
+sudo sed -i 's/^\([[:space:]]*level = \).*/\1"debug"/' /etc/containerd/config.toml
 sudo systemctl restart containerd
 echo "ok... kata runtime added to containerd"
