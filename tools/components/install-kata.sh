@@ -29,7 +29,7 @@ sudo cp /opt/kata/runtime-rs/bin/containerd-shim-kata-v2 /usr/local/bin
 echo "ok... runtime-rs ${KATA_VERSION} installed"
 
 sudo mkdir -p /etc/kata-containers/runtime-rs
-sudo cp /opt/kata/share/defaults/kata-containers/runtime-rs/* /etc/kata-containers/runtime-rs/
+sudo mv /opt/kata/share/defaults/kata-containers/runtime-rs/* /etc/kata-containers/runtime-rs/
 sudo ln -fs /etc/kata-containers/runtime-rs/configuration-qemu-runtime-rs.toml /etc/kata-containers/runtime-rs/configuration.toml
 sudo chown -R ${USER}:${GROUP} /etc/kata-containers
 echo "ok... runtime-rs qemu config applied"
