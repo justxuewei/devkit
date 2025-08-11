@@ -18,7 +18,7 @@ sudo rm -rf /usr/local/bin/crictl
 sudo rm -rf /tmp/crictl-$CRICTL_VERSION-linux-$ARCH.tar.gz
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-$ARCH.tar.gz \
     -O /tmp/crictl-$CRICTL_VERSION-linux-$ARCH.tar.gz >/dev/null
-tar -xvf /tmp/crictl-$CRICTL_VERSION-linux-$ARCH.tar.gz -C /usr/local/bin >/dev/null
+sudo tar -xvf /tmp/crictl-$CRICTL_VERSION-linux-$ARCH.tar.gz -C /usr/local/bin >/dev/null
 
 sudo bash -c "cat > /etc/crictl.yaml <<EOF
 runtime-endpoint: unix:///var/run/containerd/containerd.sock

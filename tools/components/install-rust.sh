@@ -42,5 +42,5 @@ echo "ok... rust $RUST_VERSION installed, run the following to update your PATH"
 echo '. "$HOME/.cargo/env"'
 
 sudo apt-get update >/dev/null
-sudo apt-get install -y build-essential musl-dev >/dev/null
-echo "ok... musl-dev installed"
+sudo apt-get install -y build-essential musl-dev musl-tools >/dev/null
+echo "ok... musl-dev, musl-tools installed"
