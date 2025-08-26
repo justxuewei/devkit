@@ -40,27 +40,35 @@ clean COMP:
     && (cd src/agent \
     && make clean) || :
 
-# Format the source code
-fmt:
-  @cd src/runtime-rs && cargo fmt && echo "runtime-rs completed"
-  @cd src/dragonball && cargo fmt && echo "dragonball completed"
-  @cd src/agent && cargo fmt && echo "agent completed"
+fmt COMP:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/runtime-rs && cargo fmt) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/dragonball && cargo fmt) || :
+  @[ "{{COMP}}" = "ag" ] \
+    && (cd src/agent && cargo fmt) || :
 
-# Check the source code: make check, cargo clippy & fmt
-check COMP:
+clippy COMP:
   @[ "{{COMP}}" = "rt" ] \
     && (cd src/runtime-rs \
-    && cargo clippy --all-targets --all-features -- -D warnings \
-    && cargo fmt \
+    && cargo clippy --all-targets --all-features -- -D warnings) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/dragonball \
+    && cargo clippy --all-targets --all-features -- -D warnings) || :
+  @[ "{{COMP}}" = "ag" ] \
+    && (cd src/agent \
+    && cargo clippy --all-targets --all-features -- -D warnings) || :
+
+check COMP: (fmt COMP) (clippy COMP)
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/runtime-rs \
     && make check) || :
   @[ "{{COMP}}" = "db" ] \
     && (cd src/dragonball \
-    && cargo clippy --all-targets --all-features -- -D warnings \
-    && cargo fmt) || :
+    && make check) || :
   @[ "{{COMP}}" = "ag" ] \
     && (cd src/agent \
-    && cargo clippy --all-targets --all-features -- -D warnings \
-    && cargo fmt) || :
+    && make check) || :
 
 # Run unit tests
 test COMP MOD:

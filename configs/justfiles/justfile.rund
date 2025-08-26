@@ -41,17 +41,21 @@ init:
 deinit:
   git submodule deinit -f .
 
-fmt:
-  @cd src/inhouse/runtime/src && cargo fmt
-  @cd src/inhouse/dragonball && cargo fmt
+fmt COMP:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/inhouse/runtime/src && cargo fmt) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/inhouse/dragonball && cargo fmt) || :
 
-clippy:
-  @cd src/inhouse/runtime/src \
-    && cargo clippy --all-targets --all-features -- -D warnings
-  @cd src/inhouse/dragonball \
-    && cargo clippy -- -D warnings
+clippy COMP:
+  @[ "{{COMP}}" = "rt" ] \
+    && (cd src/inhouse/runtime/src \
+      && cargo clippy --all-targets --all-features -- -D warnings) || :
+  @[ "{{COMP}}" = "db" ] \
+    && (cd src/inhouse/dragonball \
+      && cargo clippy -- -D warnings) || :
 
-check: fmt clippy
+check COMP: (fmt COMP) (clippy COMP)
 
 test COMP MOD:
   @[ "{{COMP}}" = "rt" ] \
