@@ -1,0 +1,23 @@
+build COMP:
+  @[ "{{COMP}}" = "gpu" ] \
+    && (cd gpu && cargo build) || :
+
+clippy COMP:
+  @[ "{{COMP}}" = "gpu" ] \
+    && (cd gpu && cargo clippy -- -D warnings) || :
+
+remove-link:
+  @sudo rm -rf /usr/local/bin/vhost-device-gpu
+
+link:
+    @sudo ln -s {{CURRENT_DIR}}/gpu/target/debug/vhost-device-gpu /usr/local/bin/vhost-device-gpu
+
+clean COMP:
+    @[ "{{COMP}}" = "gpu" ] \
+        && (cd gpu && cargo clean) || :
+
+fmt COMP:
+    @[ "{{COMP}}" = "gpu" ] \
+        && (cd gpu && cargo fmt) || :
+
+check COMP: (fmt COMP) (clippy COMP)
