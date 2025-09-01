@@ -42,12 +42,16 @@ deinit:
   git submodule deinit -f .
 
 fmt COMP:
+  @echo "cargo fmt..."
   @[ "{{COMP}}" = "rt" ] \
-    && (cd src/inhouse/runtime/src && cargo fmt) || :
+    && (cd src/inhouse/runtime/src \
+      && cargo fmt) || :
   @[ "{{COMP}}" = "db" ] \
-    && (cd src/inhouse/dragonball && cargo fmt) || :
+    && (cd src/inhouse/dragonball \
+      && cargo fmt) || :
 
 clippy COMP:
+  @echo "cargo clippy..."
   @[ "{{COMP}}" = "rt" ] \
     && (cd src/inhouse/runtime/src \
       && cargo clippy --all-targets --all-features -- -D warnings) || :

@@ -3,6 +3,7 @@ build COMP:
     && (cd gpu && cargo build) || :
 
 clippy COMP:
+  @echo "cargo clippy"
   @[ "{{COMP}}" = "gpu" ] \
     && (cd gpu && cargo clippy -- -D warnings) || :
 
@@ -17,7 +18,8 @@ clean COMP:
         && (cd gpu && cargo clean) || :
 
 fmt COMP:
-    @[ "{{COMP}}" = "gpu" ] \
-        && (cd gpu && cargo fmt) || :
+  @echo "cargo fmt..."
+  @[ "{{COMP}}" = "gpu" ] \
+    && (cd gpu && cargo fmt) || :
 
 check COMP: (fmt COMP) (clippy COMP)
