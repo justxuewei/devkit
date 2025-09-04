@@ -10,9 +10,8 @@ clippy COMP:
 remove-link:
   @sudo rm -rf /usr/local/bin/vhost-device-gpu
 
-link:
-    @sudo ln -s {{CURRENT_DIR}}/gpu/target/debug/vhost-device-gpu /usr/local/bin/vhost-device-gpu
-
+link: remove-link
+    @sudo ln -s {{CURRENT_DIR}}/gpu/target/debug/vhost-device-gpu /usr/local/bin
 clean COMP:
     @[ "{{COMP}}" = "gpu" ] \
         && (cd gpu && cargo clean) || :
