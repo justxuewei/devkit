@@ -72,4 +72,3 @@ test COMP MOD:
 checkout BRANCH:
   @just deinit
   @git checkout {{BRANCH}}
-  @just init
