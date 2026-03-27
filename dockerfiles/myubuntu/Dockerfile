@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     strace \
     vim \
     lsof \
-    iproute2
+    iproute2 \
+    curl
 
 ENTRYPOINT ["sleep", "infinity"]
