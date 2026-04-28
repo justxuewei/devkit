@@ -17,6 +17,12 @@ RUN apt-get update && apt-get install -y \
 RUN git config --global user.name "Xuewei Niu" && \
     git config --global user.email "niuxuewei.nxw@antgroup.com"
 
+ENV GOLANG_VERSION=1.24.3
+RUN curl -fsSL https://go.dev/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+ENV PATH=/usr/local/go/bin:$PATH
+RUN go env -w GO111MODULE=on && \
+    go env -w GOPROXY=https://goproxy.cn,direct
+
 ENV NVM_DIR=/root/.nvm
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash && \
     . "$NVM_DIR/nvm.sh" && \
