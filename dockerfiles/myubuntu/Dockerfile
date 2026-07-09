@@ -35,4 +35,4 @@ COPY id_ed25519 id_ed25519.pub id_rsa id_rsa.pub /root/.ssh/
 RUN chmod 600 /root/.ssh/id_ed25519 /root/.ssh/id_rsa && \
     chmod 644 /root/.ssh/id_ed25519.pub /root/.ssh/id_rsa.pub
 
-ENTRYPOINT ["sleep", "infinity"]
+CMD ["sleep", "infinity"]
