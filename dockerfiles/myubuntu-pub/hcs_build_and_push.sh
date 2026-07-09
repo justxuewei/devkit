@@ -5,14 +5,15 @@ CUR_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 set -euo pipefail
 
 IMAGE_NAME="niuxuewei/myubuntu-pub"
+REGISTRY="reg.antgroup-inc.cn"
 TAG="latest"
-FULL_IMAGE="${IMAGE_NAME}:${TAG}"
+FULL_IMAGE="${REGISTRY}/${IMAGE_NAME}:${TAG}"
 
 echo "==> Building image: ${FULL_IMAGE}"
 sudo docker build -t "${FULL_IMAGE}" "${CUR_PATH}"
 
 echo "==> Logging in to Docker Hub"
-sudo docker login
+sudo docker login "${REGISTRY}"
 
 echo "==> Pushing image: ${FULL_IMAGE}"
 sudo docker push "${FULL_IMAGE}"
