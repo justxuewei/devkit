@@ -1,5 +1,8 @@
 FROM ubuntu:24.04
 
+# Set by buildx per target platform (amd64 | arm64); matches Go's release arch names.
+ARG TARGETARCH
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
@@ -15,7 +18,7 @@ RUN apt-get update && apt-get install -y \
     iputils-ping
 
 ENV GOLANG_VERSION=1.24.3
-RUN curl -fsSL https://go.dev/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+RUN curl -fsSL https://go.dev/dl/go${GOLANG_VERSION}.linux-${TARGETARCH}.tar.gz | tar -C /usr/local -xzf -
 ENV PATH=/usr/local/go/bin:$PATH
 RUN go env -w GO111MODULE=on
 
