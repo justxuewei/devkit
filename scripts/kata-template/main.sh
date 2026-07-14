@@ -175,6 +175,20 @@ cmd_create() {
     fi
 }
 
+# runp_timed <pod_json> : start a pod sandbox, print its id on stdout and the
+# boot time on stderr. "Boot" here is the crictl runp duration -- the VM cold
+# boot (run-cold) or template restore (run), plus agent connect + the guest
+# CreateSandbox. This is the number to compare across run vs run-cold.
+runp_timed() {
+    local t0 t1 dur pod
+    t0=$(date +%s.%N)
+    pod="$(crictl runp --runtime "$RUNTIME_CRI" "$1")" || return 1
+    t1=$(date +%s.%N)
+    dur=$(awk -v a="$t0" -v b="$t1" 'BEGIN{printf "%.2f", b - a}')
+    echo ">>> sandbox boot (crictl runp) took ${dur}s <<<" >&2
+    printf '%s' "$pod"
+}
+
 cmd_run() {
     echo "=== [1/3] BootFromTemplate config ==="
     local cfg ts pod_json ctr_json pod cid
@@ -213,7 +227,7 @@ EOF
 EOF
     mkdir -p /tmp/kata-template-logs
     crictl pull "$IMAGE" >/dev/null 2>&1 || echo "warn: crictl pull failed, assuming image present"
-    pod="$(crictl runp --runtime "$RUNTIME_CRI" "$pod_json")" || die "crictl runp failed"
+    pod="$(runp_timed "$pod_json")" || die "crictl runp failed"
     echo "$pod" > "$RUNDIR/last-pod"
     echo "pod sandbox: $pod"
     cid="$(crictl create "$pod" "$ctr_json" "$pod_json")" || die "crictl create failed"
@@ -259,7 +273,7 @@ EOF
 EOF
     mkdir -p /tmp/kata-template-logs
     crictl pull "$IMAGE" >/dev/null 2>&1 || echo "warn: crictl pull failed, assuming image present"
-    pod="$(crictl runp --runtime "$RUNTIME_CRI" "$pod_json")" || die "crictl runp failed"
+    pod="$(runp_timed "$pod_json")" || die "crictl runp failed"
     cid="$(crictl create "$pod" "$ctr_json" "$pod_json")" || die "crictl create failed"
     crictl start "$cid" || die "crictl start failed"
     crictl pods --id "$pod"
