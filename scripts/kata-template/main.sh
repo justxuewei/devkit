@@ -133,11 +133,21 @@ ensure_config() {
     set_toml_key "$cfg" "hypervisor.dragonball" "vm_rootfs_driver" "\"virtio-blk-mmio\""
     # The template and the restored pod must have IDENTICAL device sets in
     # identical order: guest-visible MMIO windows are assigned by insertion
-    # order, so an extra device (e.g. the CNI virtio-net the run pod would
-    # get) shifts every later device and the restored guest talks to the
-    # wrong addresses. Disable pod networking on both sides.
-    set_toml_key "$cfg" "runtime" "internetworking_model" "\"none\""
-    set_toml_key "$cfg" "runtime" "disable_new_netns" "true"
+    # order, so an asymmetric device set (e.g. the CNI virtio-net on only one
+    # side) shifts every later device and the restored guest talks to the
+    # wrong addresses. NET_MODEL controls this symmetrically on both sides:
+    #   NET_MODEL=none (default) -> no pod networking, no virtio-net device
+    #   NET_MODEL=tcfilter|macvtap|... -> real pod networking + virtio-net,
+    #     exercising virtio-net snapshot save/restore. Both create and run use
+    #     the same value so the device sets stay identical.
+    local net_model="${NET_MODEL:-none}"
+    if [ "$net_model" = "none" ]; then
+        set_toml_key "$cfg" "runtime" "internetworking_model" "\"none\""
+        set_toml_key "$cfg" "runtime" "disable_new_netns" "true"
+    else
+        set_toml_key "$cfg" "runtime" "internetworking_model" "\"$net_model\""
+        set_toml_key "$cfg" "runtime" "disable_new_netns" "false"
+    fi
     echo "$cfg"
 }
 
@@ -161,7 +171,12 @@ cmd_create() {
     # The template is dumped when the sandbox finishes booting (agent up,
     # guest sandbox created), independent of the container workload. The
     # container run may still exit non-zero -> don't abort; verify the files.
-    nerdctl run --rm --runtime "$RUNTIME_NERDCTL" --net none --name "$name" \
+    # Keep the template pod's network symmetric with the restored (crictl) pod:
+    # with NET_MODEL set, give the create pod a bridge NIC too so both sides
+    # instantiate exactly one virtio-net device in the same slot.
+    local nerdctl_net="none"
+    [ "${NET_MODEL:-none}" != "none" ] && nerdctl_net="bridge"
+    nerdctl run --rm --runtime "$RUNTIME_NERDCTL" --net "$nerdctl_net" --name "$name" \
         "$IMAGE" $CMD \
         || echo "nerdctl run exited non-zero -- template is dumped at sandbox boot, verifying"
     nerdctl rm -f "$name" >/dev/null 2>&1 || true
