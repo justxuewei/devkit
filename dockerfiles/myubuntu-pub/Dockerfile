@@ -15,7 +15,10 @@ RUN apt-get update && apt-get install -y \
     iproute2 \
     curl \
     git \
-    iputils-ping
+    iputils-ping \
+    zip \
+    unzip \
+    python3-pip
 
 ENV GOLANG_VERSION=1.24.3
 RUN curl -fsSL https://go.dev/dl/go${GOLANG_VERSION}.linux-${TARGETARCH}.tar.gz | tar -C /usr/local -xzf -
