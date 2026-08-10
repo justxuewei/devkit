@@ -7,7 +7,8 @@
 # emulators and a buildx container builder, then prompts for `docker login`.
 #
 # Overrides: PLATFORMS=linux/arm64 (arm-only), TAG=..., BUILDER=...,
-# PROXY_URL=... (empty disables proxying), NO_PROXY=...
+# PROXY_URL=... (empty disables proxying), NO_PROXY=...,
+# BUILDKIT_NO_CLIENT_TOKEN=0 (reenables client-side registry token fetching)
 
 CUR_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
@@ -21,6 +22,7 @@ PLATFORMS="${PLATFORMS:-linux/amd64,linux/arm64}"
 BUILDER="${BUILDER:-mrbuilder-proxy}"
 PROXY_URL="${PROXY_URL-http://127.0.0.1:7890}"
 NO_PROXY="${NO_PROXY-*.aliyuncs.com}"
+export BUILDKIT_NO_CLIENT_TOKEN="${BUILDKIT_NO_CLIENT_TOKEN:-1}"
 
 echo "==> Registering qemu binfmt emulators (needed to cross-build; no-op if present)"
 docker run --privileged --rm tonistiigi/binfmt --install all >/dev/null 2>&1 \
