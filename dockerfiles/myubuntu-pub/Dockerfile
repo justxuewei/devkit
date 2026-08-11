@@ -20,6 +20,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     python3-pip
 
+RUN python3 -m pip install --break-system-packages --no-cache-dir \
+    dnspython==1.16.0 \
+    -i https://mirrors.aliyun.com/pypi/simple
+
 ENV GOLANG_VERSION=1.24.3
 RUN curl -fsSL https://go.dev/dl/go${GOLANG_VERSION}.linux-${TARGETARCH}.tar.gz | tar -C /usr/local -xzf -
 ENV PATH=/usr/local/go/bin:$PATH
